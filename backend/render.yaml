@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: incident-bridge-backend
+    runtime: python
+    pythonVersion: "3.11"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        scope: build
+        value: ${DATABASE_URL}
+      - key: CORS_ORIGINS
+        value: "https://incident-bridge.vercel.app,https://incident-bridge.netlify.app"
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: RESPONDER_USERNAME
+        value: responder
+      - key: RESPONDER_PASSWORD
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXP_MINUTES
+        value: "1440"
+      - key: MEDIA_UPLOAD_DIR
+        value: "/var/tmp/uploads"
+      - key: MEDIA_BASE_URL
+        value: "${RENDER_EXTERNAL_URL}"
+databases:
+  - name: incidents_db
+    dbName: incidents
+    user: incidents_user
